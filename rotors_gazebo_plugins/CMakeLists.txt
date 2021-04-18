@@ -241,7 +241,7 @@ if (NOT NO_ROS)
 
   if(${gazebo_dev_FOUND})
     catkin_package(
-      INCLUDE_DIRS include ${Eigen_INCLUDE_DIRS}
+      INCLUDE_DIRS include ${Eigen_INCLUDE_DIRS} ${proto_devel_dir}
       LIBRARIES rotors_gazebo_motor_model rotors_gazebo_controller_interface
       CATKIN_DEPENDS cv_bridge geometry_msgs mav_msgs octomap_msgs octomap_ros rosbag roscpp gazebo_plugins rotors_comm rotors_control std_srvs tf
       DEPENDS Eigen octomap OpenCV
@@ -250,7 +250,7 @@ if (NOT NO_ROS)
     set(target_linking_LIBRARIES ${catkin_LIBRARIES} ${gazebo_dev_LIBRARIES})
   else()
     catkin_package(
-      INCLUDE_DIRS include ${Eigen_INCLUDE_DIRS}
+      INCLUDE_DIRS include ${Eigen_INCLUDE_DIRS} ${proto_devel_dir}
       LIBRARIES rotors_gazebo_motor_model rotors_gazebo_controller_interface
       CATKIN_DEPENDS cv_bridge geometry_msgs mav_msgs octomap_msgs octomap_ros rosbag roscpp gazebo_plugins rotors_comm rotors_control std_srvs tf
       DEPENDS Eigen octomap OpenCV
