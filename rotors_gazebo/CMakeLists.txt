@@ -44,7 +44,7 @@ if(NO_ROS)
   return()
 endif()
 
-find_package(catkin REQUIRED COMPONENTS gazebo_msgs geometry_msgs mav_msgs roscpp sensor_msgs)
+find_package(catkin REQUIRED COMPONENTS gazebo_msgs geometry_msgs mav_msgs roscpp sensor_msgs uav_msgs)
 
 catkin_package(
   CATKIN_DEPENDS
@@ -55,7 +55,9 @@ catkin_package(
     sensor_msgs
 )
 
-include_directories(include ${catkin_INCLUDE_DIRS})
+find_package(Boost QUIET REQUIRED COMPONENTS system thread)
+
+include_directories(include ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 
 add_executable(waypoint_publisher src/waypoint_publisher.cpp)
 target_link_libraries(waypoint_publisher ${catkin_LIBRARIES})
