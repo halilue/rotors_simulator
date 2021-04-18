@@ -209,9 +209,23 @@ file(GLOB msgs msgs/*.proto)
 
 # Finally, generate the .cpp files from the .proto files
 PROTOBUF_GENERATE_CPP(PROTO_SRCS PROTO_HDRS ${msgs})
+set(proto_gen_files "")
+set(proto_devel_dir ${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_INCLUDE_DESTINATION}/${PROJECT_NAME}/)
+file(MAKE_DIRECTORY ${proto_devel_dir})
+foreach(f ${PROTO_HDRS})
+    get_filename_component(proto_name ${f} NAME)
+    list(APPEND proto_gen_files ${proto_devel_dir}/${proto_name})
+endforeach(f ${PROTO_HDRS})
+
+add_custom_command(
+    COMMAND ${CMAKE_COMMAND} -E copy ${PROTO_HDRS} ${proto_devel_dir}/
+    DEPENDS ${PROTO_SRCS}
+    OUTPUT ${proto_gen_files}
+)
+
 
 # Create a shared library of protobuf messages (.so extension on Linux platforms)
-add_library(mav_msgs SHARED ${PROTO_SRCS})
+add_library(mav_msgs SHARED ${PROTO_SRCS} ${proto_gen_files})
 target_link_libraries(mav_msgs ${PROTOBUF_LIBRARY} gazebo_msgs)
 
 # This causes mav_msgs to be linked with every created library in this file from this
@@ -549,6 +563,10 @@ install(
     ${targets_to_install}
   DESTINATION ${BIN_DESTINATION}
   LIBRARY DESTINATION ${LIB_DESTINATION}
+)
+install(
+    DIRECTORY ${proto_devel_dir}
+    DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
 )
 
 #message(FATAL_ERROR "Reached EOF.")
